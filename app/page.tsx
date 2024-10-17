@@ -2,17 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import MonacoEditor from '@monaco-editor/react'
-import { useMonaco } from '@monaco-editor/react'
 import { JetBrains_Mono } from 'next/font/google'
 
-// Load the JetBrains Mono font
 const jetbrains = JetBrains_Mono({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
   display: 'swap'
 })
 
-// Define the languages and their templates
 const LANGUAGES = {
   cpp: {
     name: 'C++',
@@ -66,35 +63,6 @@ func main() {
   }
 }
 
-const catppuccinTheme = {
-  base: 'vs-dark',
-  inherit: true,
-  rules: [
-    { background: '1E1E2E' },
-    { foreground: 'F5EBD9', token: 'comment' },
-    { foreground: 'F5C2E7', token: 'string' },
-    { foreground: 'F28FAD', token: 'number' },
-    { foreground: 'B9FBC0', token: 'keyword' },
-    { foreground: 'FF9D00', token: 'variable' },
-    { foreground: '89B9F8', token: 'function' },
-    { foreground: 'F8F0E3', token: 'type' }
-  ],
-  colors: {
-    'editor.foreground': '#F5EBD9',
-    'editor.background': '#1E1E2E',
-    'editorCursor.foreground': '#F5C2E7',
-    'editor.lineHighlightBackground': '#2A283E',
-    'editor.inactiveSelectionBackground': '#B2A3DA',
-    'editorWhitespace.foreground': '#555555',
-    'editorIndentGuide.background': '#3B3B4F',
-    'editorIndentGuide.activeBackground': '#FF9D00',
-    'editorBracketMatch.background': '#2A283E',
-    'editorError.foreground': '#FF0000',
-    'editorWarning.foreground': '#FFA500',
-    'editorInfo.foreground': '#00FFFF'
-  }
-}
-
 export default function Home() {
   const [code, setCode] = useState('')
   const [language, setLanguage] = useState('cpp')
@@ -105,15 +73,6 @@ export default function Home() {
   useEffect(() => {
     setCode(LANGUAGES[language].template)
   }, [language])
-
-  const monaco = useMonaco()
-
-  useEffect(() => {
-    if (monaco) {
-      monaco.editor.defineTheme('catppuccin', catppuccinTheme)
-      monaco.editor.setTheme('catppuccin')
-    }
-  }, [monaco])
 
   const handleCompile = async () => {
     setIsCompiling(true)
@@ -165,12 +124,11 @@ export default function Home() {
     document.body.removeChild(element)
   }
 
-  // Add event listener for Ctrl + S
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.ctrlKey && event.key === 's') {
-        event.preventDefault() // Prevent default save dialog
-        handleCompile() // Trigger the compile function
+        event.preventDefault()
+        handleCompile()
       }
     }
 
@@ -181,37 +139,41 @@ export default function Home() {
   })
 
   return (
-    <div className={`flex min-h-screen bg-base p-5 ${jetbrains.className}`}>
+    <div
+      className={`flex min-h-screen bg-mocha-base p-5 ${jetbrains.className}`}
+    >
       <div className='w-1/2 pr-5'>
-        <h1 className='text-3xl font-bold mb-5 text-mauve'>
+        <h1 className='text-3xl font-bold mb-5 text-mocha-mauve'>
           Problem Description
         </h1>
-        <p className='text-lg mb-4 text-text'>Given you an array, like this:</p>
-        <pre className='bg-surface0 text-text p-4 rounded-lg mb-4'>
+        <p className='text-lg mb-4 text-mocha-text'>
+          Given you an array, like this:
+        </p>
+        <pre className='bg-mocha-surface0 text-mocha-text p-4 rounded-lg mb-4'>
           {`["from 1 to 3","from 2 to 6","from -100 to 0"]`}
         </pre>
-        <p className='text-lg text-text mb-4'>
+        <p className='text-lg text-mocha-text mb-4'>
           Find out the maximum range, return by an array:
         </p>
-        <pre className='bg-surface0 text-text p-4 rounded-lg mb-4'>
+        <pre className='bg-mocha-surface0 text-mocha-text p-4 rounded-lg mb-4'>
           {`findMaxRange(["from 1 to 3","from 2 to 6","from -100 to 0"])`}
           <br />
           {`return: ["from -100 to 0"]`}
         </pre>
-        <p className='text-lg text-text'>
+        <p className='text-lg text-mocha-text'>
           If more than one element has the maximum range, return them according
           to the order of the original array.
         </p>
       </div>
 
       <div className='w-1/2'>
-        <h1 className='text-3xl font-bold mb-5 text-mauve'>Solution</h1>
+        <h1 className='text-3xl font-bold mb-5 text-mocha-mauve'>Solution</h1>
 
         <div className='mb-4'>
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className='border border-purple-800 text-mauve bg-base py-2 px-4 rounded'
+            className='border border-purple-800 text-mocha-mauve bg-mocha-base py-2 px-4 rounded'
           >
             {Object.keys(LANGUAGES).map((lang) => (
               <option
@@ -224,12 +186,10 @@ export default function Home() {
           </select>
         </div>
 
-        <div
-          className={`bg-surface0 backdrop-blur-xl border border-white/30 p-4 rounded-lg shadow-lg`}
-        >
+        <div className={`bg-mocha-surface1 p-4 rounded-lg mb-4`}>
           <MonacoEditor
-            height='450px'
-            theme='catppuccin'
+            height='430px'
+            theme='vs-dark'
             language={language}
             value={code}
             onChange={(value) => setCode(value)}
@@ -245,36 +205,35 @@ export default function Home() {
           />
         </div>
 
-        <div className='mt-4 space-x-4'>
+        <div className='flex justify-between'>
           <button
             onClick={handleCompile}
             disabled={isCompiling}
             className={`py-2 px-4 rounded ${
-              isCompiling
-                ? 'bg-gray-600'
-                : 'border-2 border-purple-800 text-mauve'
-            } transition`}
+              isCompiling ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'
+            } text-white`}
           >
             {isCompiling ? 'Compiling...' : 'Compile'}
           </button>
           <button
             onClick={handleDownload}
-            className='py-2 px-4 rounded bg-fuchsia-950 text-text transition'
+            className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded'
           >
-            Download Code
+            Download
           </button>
         </div>
 
         {output && (
-          <pre className='mt-4 bg-surface0 text-text p-4 rounded-lg border border-white/30'>
-            {output}
-          </pre>
+          <div className='bg-mocha-surface0 p-4 rounded-lg mt-4'>
+            <h2 className='text-lg font-bold text-mocha-mauve'>Output</h2>
+            <pre className='text-mocha-text'>{output}</pre>
+          </div>
         )}
-
         {error && (
-          <pre className='mt-4 bg-red-500 text-white p-4 rounded-lg border border-white/30'>
-            {error}
-          </pre>
+          <div className='bg-red-600 text-white p-4 rounded-lg mt-4'>
+            <h2 className='text-lg font-bold'>Error</h2>
+            <pre>{error}</pre>
+          </div>
         )}
       </div>
     </div>
