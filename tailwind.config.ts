@@ -18,7 +18,7 @@ module.exports = {
           maroon: '#eba0ac',
           peach: '#fab387',
           yellow: '#f9e2af',
-          greens: '#a6e3a1',
+          green: '#a6e3a1',
           teal: '#94e2d5',
           sky: '#89dceb',
           sapphire: '#74c7ec',

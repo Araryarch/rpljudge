@@ -206,15 +206,28 @@ export default function Home() {
         </div>
 
         <div className='flex justify-between'>
-          <button
-            onClick={handleCompile}
-            disabled={isCompiling}
-            className={`py-2 px-4 rounded ${
-              isCompiling ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'
-            } text-white`}
-          >
-            {isCompiling ? 'Compiling...' : 'Compile'}
-          </button>
+          <div className='first-button flex gap-2'>
+            <button
+              onClick={handleCompile}
+              disabled={isCompiling}
+              className={`py-2 px-4 rounded ${
+                isCompiling
+                  ? 'bg-mocha-mauve text-mocha-surface0'
+                  : 'border-2 border-mocha-mauve text-mocha-mauve'
+              } `}
+            >
+              {isCompiling ? 'Compiling...' : 'Run Code'}
+            </button>
+            <button
+              className={`py-2 px-4 rounded ${
+                isCompiling
+                  ? 'bg-gray-400 text-mocha-mauve'
+                  : 'bg-mocha-teal  border-mocha-mauve border-2 text-mocha-surface0'
+              }  font-bold`}
+            >
+              {'Submit'}
+            </button>
+          </div>
           <button
             onClick={handleDownload}
             className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded'
