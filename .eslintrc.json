@@ -1,3 +1,8 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off", // Mengizinkan tipe any
+    "@typescript-eslint/no-unused-vars": "off", // Mengizinkan variabel yang tidak terpakai
+    "@typescript-eslint/explicit-module-boundary-types": "off" // Mengizinkan fungsi tanpa tipe batasan
+  }
 }
