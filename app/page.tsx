@@ -49,7 +49,8 @@ export default function Home() {
       <div className='w-1/2 p-6 bg-mocha-mantle rounded-lg shadow-md border border-mocha-overlay0'>
         <h2 className='text-2xl font-bold text-mocha-text mb-4'>Soal:</h2>
         <p className='text-mocha-subtext0 mb-2'>
-          Buatlah program sederhana yang mencetak "Hello, World!" ke layar.
+          Buatlah program sederhana yang mencetak &quot;Hello, World!&quot; ke
+          layar.
         </p>
         <p className='text-mocha-subtext0'>
           Contoh output:
