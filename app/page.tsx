@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import CodeEditor from './components/Editor' // Adjust the path if necessary
+import CodeEditor from './components/Editor'
 
 export default function Home() {
   const [output, setOutput] = useState<string>('')
