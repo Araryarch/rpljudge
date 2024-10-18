@@ -18,13 +18,13 @@ const languages: LanguageOption[] = [
     label: 'C',
     value: 50,
     defaultCode:
-      '#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}'
+      '#include <stdio.h>\n\nint main() {\n  printf("Hello, World!");\n  return 0;\n}'
   },
   {
     label: 'C++',
     value: 54,
     defaultCode:
-      '#include <iostream>\nint main() {\n  std::cout << "Hello, World!";\n  return 0;\n}'
+      '#include <bits/stdc++.h>\n\nint main() {\n  std::cout << "Hello, World!";\n  return 0;\n}'
   },
   {
     label: 'C#',
