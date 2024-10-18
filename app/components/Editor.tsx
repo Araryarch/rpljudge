@@ -76,10 +76,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
       <select
         onChange={handleLanguageChange}
         value={selectedLanguage}
-        className='p-2 border border-mocha-overlay0 rounded-md focus:outline-none focus:ring focus:ring-mocha-flamingo'
+        className='p-2 border border-mocha-overlay0 bg-mocha-red rounded-md focus:outline-none focus:ring focus:ring-mocha-flamingo'
       >
         {languages.map((lang) => (
           <option
+            className='bg-mocha-red text-mocha-surface0'
             key={lang.value}
             value={lang.value}
           >
@@ -92,7 +93,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
         language={selectedLanguage === 63 ? 'javascript' : 'cpp'}
         value={code}
         onChange={handleEditorChange}
-        theme='vs-dark' // Set the editor theme to Catppuccin
+        theme='vs-dark'
         className='border border-mocha-overlay0 rounded-md'
       />
       <button
