@@ -219,11 +219,7 @@ export default function Home() {
               {isCompiling ? 'Compiling...' : 'Run Code'}
             </button>
             <button
-              className={`py-2 px-4 rounded ${
-                isCompiling
-                  ? 'bg-gray-400 text-mocha-mauve'
-                  : 'bg-mocha-teal  border-mocha-mauve border-2 text-mocha-surface0'
-              }  font-bold`}
+              className={`py-2 px-4 rounded bg-mocha-teal  border-mocha-mauve border-2 text-mocha-surface0 font-bold`}
             >
               {'Submit'}
             </button>

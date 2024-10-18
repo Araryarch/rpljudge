@@ -76,7 +76,7 @@ const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
 }
 
 async function createTempDir(prefix: string): Promise<string> {
-  const tempDir = path.join('/tmp', prefix + '-' + uuidv4()) // Use /tmp
+  const tempDir = path.join('/tmp', prefix + '-' + uuidv4())
   await mkdir(tempDir, { recursive: true })
   return tempDir
 }
