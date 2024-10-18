@@ -92,7 +92,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
         language={selectedLanguage === 63 ? 'javascript' : 'cpp'}
         value={code}
         onChange={handleEditorChange}
-        theme='catppuccin' // Set the editor theme to Catppuccin
+        theme='vs-dark' // Set the editor theme to Catppuccin
         className='border border-mocha-overlay0 rounded-md'
       />
       <button
