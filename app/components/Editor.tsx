@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import Editor from '@monaco-editor/react'
-import { JetBrains_Mono } from 'next/font/google'
-
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'] // Adjust weights as needed
-})
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface LanguageOption {
   label: string
@@ -48,7 +44,25 @@ const languages: LanguageOption[] = [
 
 interface CodeEditorProps {
   initialCode?: string
-  onSubmit: (code: string, languageId: number) => void
+  onSubmit: (code: string, languageId: number) => Promise<void>
+}
+
+const useRateLimiter = (limit: number, interval: number) => {
+  const [isRateLimited, setIsRateLimited] = useState(false)
+  const [lastRequestTime, setLastRequestTime] = useState<number | null>(null)
+
+  const checkRateLimit = () => {
+    const currentTime = Date.now()
+    if (lastRequestTime && currentTime - lastRequestTime < interval) {
+      setIsRateLimited(true)
+      setTimeout(() => setIsRateLimited(false), interval)
+      return false
+    }
+    setLastRequestTime(currentTime)
+    return true
+  }
+
+  return { isRateLimited, checkRateLimit }
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
@@ -58,6 +72,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<number>(
     languages[0].value
   )
+
+  const { isRateLimited, checkRateLimit } = useRateLimiter(5, 5000)
 
   const handleEditorChange = (value: string | undefined) => {
     setCode(value || '')
@@ -73,8 +89,28 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
     }
   }
 
-  const handleRunCode = () => {
-    onSubmit(code, selectedLanguage)
+  const handleRunCode = async () => {
+    if (!checkRateLimit()) {
+      toast.warn(
+        'You are being rate limited. Please wait before trying again.',
+        {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        }
+      )
+      return
+    }
+
+    try {
+      await onSubmit(code, selectedLanguage)
+    } catch (error) {
+      console.error('Error running code:', error)
+    }
   }
 
   return (
@@ -121,10 +157,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
       </div>
       <button
         onClick={handleRunCode}
-        className='p-2 bg-mocha-mauve text-mocha-surface0 font-bold rounded-md hover:bg-mocha-sapphire'
+        className={`p-2 ${
+          isRateLimited ? 'bg-gray-400 cursor-not-allowed' : 'bg-mocha-mauve'
+        } text-mocha-surface0 font-bold rounded-md hover:bg-mocha-sapphire`}
+        disabled={isRateLimited}
       >
-        Run Code
+        {isRateLimited ? 'Please wait...' : 'Run Code'}
       </button>
+      <ToastContainer />
     </div>
   )
 }
