@@ -1,4 +1,4 @@
-# RPLJudge
+# RPLJUDGE
 
 RPLJudge adalah platform penilaian otomatis untuk kompetisi pemrograman yang dirancang dengan menggunakan Next.js dan TypeScript. Proyek ini bertujuan untuk memberikan sistem penilaian yang efisien dan mudah digunakan bagi peserta dan juri dalam lomba pemrograman.
 
