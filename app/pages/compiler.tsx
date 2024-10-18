@@ -27,7 +27,6 @@ const questions = [
       { input: '5 6', expectedOutput: '11' }
     ]
   }
-  // ... other questions
 ]
 
 const Compiler = () => {
@@ -38,6 +37,8 @@ const Compiler = () => {
   const [currentQuestion, setCurrentQuestion] = useState(questions[0])
   const [resultLines, setResultLines] = useState([])
   const [activeTab, setActiveTab] = useState('question')
+
+  console.log(process.env.NEXT_PUBLIC_APIKEY)
 
   const compileCode = async () => {
     setError('')
