@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import CodeEditor from './components/Editor'
+import CodeEditor from './components/Editor' // Adjust the path if necessary
 
 export default function Home() {
   const [output, setOutput] = useState<string>('')
@@ -45,34 +45,41 @@ export default function Home() {
 
   return (
     <div className='min-h-screen p-8 bg-mocha-base flex'>
-      {/* Soal Section */}
-      <div className='w-1/2 p-6 bg-mocha-mantle rounded-lg shadow-md border border-mocha-overlay0'>
-        <h2 className='text-2xl font-bold text-mocha-text mb-4'>Soal:</h2>
-        <p className='text-mocha-subtext0 mb-2'>
-          Buatlah program sederhana yang mencetak &quot;Hello, World!&quot; ke
-          layar.
-        </p>
-        <p className='text-mocha-subtext0'>
-          Contoh output:
-          <span className='font-semibold text-mocha-text'> Hello, World!</span>
-        </p>
-      </div>
+      {/* Container for equal height sections */}
+      <div className='flex w-full'>
+        {/* Instructions Section */}
+        <div className='w-1/3 p-6 bg-mocha-mantle rounded-lg shadow-lg border border-mocha-overlay0 flex flex-col justify-between'>
+          <div>
+            <h2 className='text-2xl font-bold text-mocha-text mb-4'>Soal:</h2>
+            <p className='text-mocha-subtext0 mb-2'>
+              Buatlah program sederhana yang mencetak &quot;Hello, World!&quot;
+              ke layar.
+            </p>
+            <p className='text-mocha-subtext0'>
+              Contoh output:
+              <span className='font-semibold text-mocha-text'>
+                {' '}
+                Hello, World!
+              </span>
+            </p>
+          </div>
+        </div>
 
-      {/* Code Editor Section */}
-      <div className='w-1/2 ml-4'>
-        <div className='max-w-4xl mx-auto bg-mocha-mantle p-6 rounded-lg shadow-md border border-mocha-overlay0'>
-          <h1 className='text-2xl font-bold text-mocha-text mb-4'>
-            Code Editor
-          </h1>
-          <p className='text-mocha-subtext0 mb-6'>
-            Tulis dan jalankan kode Anda di bawah ini:
-          </p>
+        {/* Code Editor Section */}
+        <div className='w-2/3 ml-4 p-6 bg-mocha-mantle rounded-lg shadow-lg border border-mocha-overlay0 flex flex-col justify-between'>
+          <div>
+            <h1 className='text-2xl font-bold text-mocha-text mb-4'>
+              Code Editor
+            </h1>
+            <p className='text-mocha-subtext0 mb-4'>
+              Tulis dan jalankan kode Anda di bawah ini:
+            </p>
+            <CodeEditor onSubmit={handleSubmit} />
+          </div>
 
-          <CodeEditor onSubmit={handleSubmit} />
-
-          <div className='mt-6 bg-mocha-surface1 p-4 rounded-lg'>
+          <div className='mt-6 bg-mocha-surface1 p-4 rounded-lg border border-mocha-overlay0'>
             <h3 className='text-lg font-semibold text-mocha-text'>Output:</h3>
-            <pre className='mt-2 p-2 bg-mocha-overlay1 rounded-md'>
+            <pre className='mt-2 p-2 bg-mocha-overlay1 rounded-md text-mocha-text'>
               {output || 'No output yet.'}
             </pre>
           </div>

@@ -1,5 +1,11 @@
 import type { Metadata } from 'next'
+import { JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'] // Sesuaikan dengan bobot yang diperlukan
+})
 
 export const metadata: Metadata = {
   title: 'RPLJUDGE',
@@ -13,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`antialiased`}>{children}</body>
+      <body className={`${jetBrainsMono.className} antialiased`}>
+        {children}
+      </body>
     </html>
   )
 }

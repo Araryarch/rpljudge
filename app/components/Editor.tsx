@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
 import Editor from '@monaco-editor/react'
+import { JetBrains_Mono } from 'next/font/google'
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'] // Adjust weights as needed
+})
 
 interface LanguageOption {
   label: string
@@ -76,11 +82,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
       <select
         onChange={handleLanguageChange}
         value={selectedLanguage}
-        className='p-2 border border-mocha-overlay0 bg-mocha-red rounded-md focus:outline-none focus:ring focus:ring-mocha-flamingo'
+        className='p-2 border border-mocha-overlay0 bg-mocha-surface1 rounded-md focus:outline-none focus:ring focus:ring-mocha-flamingo text-mocha-text'
       >
         {languages.map((lang) => (
           <option
-            className='bg-mocha-red text-mocha-surface0'
+            className='bg-mocha-surface1 text-mocha-text'
             key={lang.value}
             value={lang.value}
           >
@@ -88,14 +94,19 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
           </option>
         ))}
       </select>
-      <Editor
-        height='400px'
-        language={selectedLanguage === 63 ? 'javascript' : 'cpp'}
-        value={code}
-        onChange={handleEditorChange}
-        theme='vs-dark'
-        className='border border-mocha-overlay0 rounded-md'
-      />
+      <div className='p-2 bg-mocha-surface2 rounded'>
+        <Editor
+          height='400px'
+          language={selectedLanguage === 63 ? 'javascript' : 'cpp'}
+          value={code}
+          onChange={handleEditorChange}
+          theme='vs-dark'
+          className='border border-mocha-overlay0 rounded-md'
+          options={{
+            fontSize: 17
+          }}
+        />
+      </div>
       <button
         onClick={handleRunCode}
         className='p-2 bg-mocha-blue text-white rounded-md hover:bg-mocha-sapphire'
