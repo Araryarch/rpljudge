@@ -43,7 +43,6 @@ const Compiler = () => {
     setError('')
     setOutput('')
 
-    // Hanya ambil dua test case pertama
     const inputs = currentQuestion.testCases
       .slice(0, 2)
       .map((tc) => tc.input)
@@ -52,7 +51,7 @@ const Compiler = () => {
       method: 'POST',
       url: 'https://jdoodle2.p.rapidapi.com/v1',
       headers: {
-        'x-rapidapi-key': '184ca37c37mshfa094fe16462b0fp180bb8jsn71d98c747e6d',
+        'x-rapidapi-key': process.env.NEXT_PUBLIC_APIKEY,
         'x-rapidapi-host': 'jdoodle2.p.rapidapi.com',
         'Content-Type': 'application/json'
       },
