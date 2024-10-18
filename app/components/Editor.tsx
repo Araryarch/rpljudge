@@ -76,7 +76,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
       <select
         onChange={handleLanguageChange}
         value={selectedLanguage}
-        className='p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200'
+        className='p-2 border border-mocha-overlay0 rounded-md focus:outline-none focus:ring focus:ring-mocha-flamingo'
       >
         {languages.map((lang) => (
           <option
@@ -92,11 +92,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
         language={selectedLanguage === 63 ? 'javascript' : 'cpp'}
         value={code}
         onChange={handleEditorChange}
-        className='border border-gray-300 rounded-md'
+        theme='catppuccin' // Set the editor theme to Catppuccin
+        className='border border-mocha-overlay0 rounded-md'
       />
       <button
         onClick={handleRunCode}
-        className='p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700'
+        className='p-2 bg-mocha-blue text-white rounded-md hover:bg-mocha-sapphire'
       >
         Run Code
       </button>

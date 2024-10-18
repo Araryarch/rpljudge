@@ -44,23 +44,37 @@ export default function Home() {
   }
 
   return (
-    <div className='min-h-screen p-8 bg-gray-100'>
-      <div className='max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md'>
-        <h1 className='text-2xl font-bold text-gray-800 mb-4'>
-          Welcome to the Code Editor!
-        </h1>
-        <p className='text-gray-700 mb-6'>
-          Use the editor below to write and run your code in various programming
-          languages.
+    <div className='min-h-screen p-8 bg-mocha-base flex'>
+      {/* Soal Section */}
+      <div className='w-1/2 p-6 bg-mocha-mantle rounded-lg shadow-md border border-mocha-overlay0'>
+        <h2 className='text-2xl font-bold text-mocha-text mb-4'>Soal:</h2>
+        <p className='text-mocha-subtext0 mb-2'>
+          Buatlah program sederhana yang mencetak "Hello, World!" ke layar.
         </p>
+        <p className='text-mocha-subtext0'>
+          Contoh output:
+          <span className='font-semibold text-mocha-text'> Hello, World!</span>
+        </p>
+      </div>
 
-        <CodeEditor onSubmit={handleSubmit} />
+      {/* Code Editor Section */}
+      <div className='w-1/2 ml-4'>
+        <div className='max-w-4xl mx-auto bg-mocha-mantle p-6 rounded-lg shadow-md border border-mocha-overlay0'>
+          <h1 className='text-2xl font-bold text-mocha-text mb-4'>
+            Code Editor
+          </h1>
+          <p className='text-mocha-subtext0 mb-6'>
+            Tulis dan jalankan kode Anda di bawah ini:
+          </p>
 
-        <div className='mt-6 bg-gray-50 p-4 rounded-lg'>
-          <h3 className='text-lg font-semibold text-gray-800'>Output:</h3>
-          <pre className='mt-2 p-2 bg-gray-200 rounded-md'>
-            {output || 'No output yet.'}
-          </pre>
+          <CodeEditor onSubmit={handleSubmit} />
+
+          <div className='mt-6 bg-mocha-surface1 p-4 rounded-lg'>
+            <h3 className='text-lg font-semibold text-mocha-text'>Output:</h3>
+            <pre className='mt-2 p-2 bg-mocha-overlay1 rounded-md'>
+              {output || 'No output yet.'}
+            </pre>
+          </div>
         </div>
       </div>
     </div>
