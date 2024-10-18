@@ -4,7 +4,7 @@ import { useState } from 'react'
 import CodeEditor from './components/Editor'
 
 export default function Home() {
-  const [output, setOutput] = useState<string>('') // State untuk menyimpan hasil output dari eksekusi kode
+  const [output, setOutput] = useState<string>('')
 
   const handleSubmit = async (code: string, languageId: number) => {
     console.log('Kode yang akan dijalankan:', code)
@@ -23,7 +23,7 @@ export default function Home() {
           },
           body: JSON.stringify({
             language_id: languageId,
-            source_code: btoa(code), // Mengonversi source code ke base64
+            source_code: btoa(code),
             stdin: ''
           })
         }
@@ -31,7 +31,6 @@ export default function Home() {
 
       const result = await response.json()
 
-      // Mendekode output dari base64
       const decodedOutput = result.stdout
         ? atob(result.stdout)
         : result.stderr

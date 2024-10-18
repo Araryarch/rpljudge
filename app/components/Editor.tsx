@@ -34,7 +34,7 @@ const languages: LanguageOption[] = [
   },
   { label: 'Python3', value: 71, defaultCode: 'print("Hello, World!")' },
   {
-    label: 'JavaScript',
+    label: 'Javascript',
     value: 63,
     defaultCode: 'console.log("Hello, World!");'
   }
