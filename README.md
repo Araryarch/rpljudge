@@ -90,25 +90,3 @@ Kami sangat menghargai kontribusi dari semua orang. Jika Anda ingin berkontribus
 ## Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE).
-
-## Kontak
-
-Untuk pertanyaan atau saran, silakan hubungi:
-
-- **Ararya Arka**: [araryaarch@gmail.com](mailto:araryaarch@gmail.com)
-
-```
-
-### Penjelasan:
-
-- **Judul dan Deskripsi**: Menjelaskan nama proyek dan fungsinya.
-- **Fitur Utama**: Daftar fitur yang ditawarkan oleh proyek.
-- **Arsitektur**: Teknologi yang digunakan dalam proyek.
-- **Instalasi**: Langkah-langkah untuk menginstal dan menjalankan proyek secara lokal.
-- **Penggunaan**: Cara menggunakan aplikasi setelah diinstal.
-- **Kontribusi**: Petunjuk bagi orang lain untuk berkontribusi pada proyek.
-- **Lisensi**: Informasi tentang lisensi yang digunakan.
-- **Kontak**: Informasi kontak untuk pertanyaan lebih lanjut.
-
-Silakan sesuaikan isi README ini dengan detail proyek Anda agar sesuai dengan fitur dan struktur yang Anda inginkan.
-```
