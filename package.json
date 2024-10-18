@@ -22,6 +22,7 @@
     "react-codemirror2": "^8.0.0",
     "react-dom": "^18",
     "react-monaco-editor": "^0.56.2",
+    "react-toastify": "^10.0.6",
     "sweetalert2": "^11.6.13",
     "uuid": "^10.0.0",
     "v4": "^0.0.1"

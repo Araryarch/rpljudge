@@ -1,249 +1,68 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import MonacoEditor from '@monaco-editor/react'
-import { JetBrains_Mono } from 'next/font/google'
-
-const jetbrains = JetBrains_Mono({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap'
-})
-
-const LANGUAGES = {
-  cpp: {
-    name: 'C++',
-    template: `#include <iostream>
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-}`
-  },
-  c: {
-    name: 'C',
-    template: `#include <stdio.h>
-int main() {
-    printf("Hello, World!\\n");
-    return 0;
-}`
-  },
-  java: {
-    name: 'Java',
-    template: `public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}`
-  },
-  python: {
-    name: 'Python',
-    template: `print("Hello, World!")`
-  },
-  javascript: {
-    name: 'Javascript',
-    template: `console.log("Hello, World!");`
-  },
-  ruby: {
-    name: 'Ruby',
-    template: `puts "Hello, World!"`
-  },
-  go: {
-    name: 'Go',
-    template: `package main
-import "fmt"
-func main() {
-    fmt.Println("Hello, World!")
-}`
-  },
-  rust: {
-    name: 'Rust',
-    template: `fn main() {
-    println!("Hello, World!");
-}`
-  }
-}
+import { useState } from 'react'
+import CodeEditor from './components/Editor'
 
 export default function Home() {
-  const [code, setCode] = useState('')
-  const [language, setLanguage] = useState('cpp')
-  const [isCompiling, setIsCompiling] = useState(false)
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
+  const [output, setOutput] = useState<string>('') // State untuk menyimpan hasil output dari eksekusi kode
 
-  useEffect(() => {
-    setCode(LANGUAGES[language].template)
-  }, [language])
-
-  const handleCompile = async () => {
-    setIsCompiling(true)
-    setOutput('')
-    setError('')
+  const handleSubmit = async (code: string, languageId: number) => {
+    console.log('Kode yang akan dijalankan:', code)
+    console.log('Bahasa ID:', languageId)
 
     try {
-      const res = await fetch('/api/compile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ code, language })
-      })
+      const response = await fetch(
+        'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=true',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RapidAPI-Key':
+              '184ca37c37mshfa094fe16462b0fp180bb8jsn71d98c747e6d',
+            'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+          },
+          body: JSON.stringify({
+            language_id: languageId,
+            source_code: btoa(code), // Mengonversi source code ke base64
+            stdin: ''
+          })
+        }
+      )
 
-      const data = await res.json()
+      const result = await response.json()
 
-      if (data.error) {
-        setError(data.error)
-        return
-      }
+      // Mendekode output dari base64
+      const decodedOutput = result.stdout
+        ? atob(result.stdout)
+        : result.stderr
+        ? atob(result.stderr)
+        : 'No output'
 
-      setOutput(data.output)
+      setOutput(decodedOutput)
     } catch (error) {
-      setError('An error occurred while compiling the code. Please try again.')
-    } finally {
-      setIsCompiling(false)
+      setOutput('Error executing the code')
     }
   }
-
-  const handleDownload = () => {
-    const fileExtensionMap = {
-      cpp: 'cpp',
-      c: 'c',
-      java: 'java',
-      python: 'py',
-      javascript: 'js',
-      ruby: 'rb',
-      go: 'go',
-      rust: 'rs'
-    }
-
-    const file = new Blob([code], { type: 'text/plain' })
-    const element = document.createElement('a')
-    element.href = URL.createObjectURL(file)
-    element.download = `code.${fileExtensionMap[language]}`
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
-  }
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === 's') {
-        event.preventDefault()
-        handleCompile()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  })
 
   return (
-    <div
-      className={`flex min-h-screen bg-mocha-base p-5 ${jetbrains.className}`}
-    >
-      <div className='w-1/2 pr-5'>
-        <h1 className='text-3xl font-bold mb-5 text-mocha-mauve'>
-          Problem Description
+    <div className='min-h-screen p-8 bg-gray-100'>
+      <div className='max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md'>
+        <h1 className='text-2xl font-bold text-gray-800 mb-4'>
+          Welcome to the Code Editor!
         </h1>
-        <p className='text-lg mb-4 text-mocha-text'>
-          Given you an array, like this:
+        <p className='text-gray-700 mb-6'>
+          Use the editor below to write and run your code in various programming
+          languages.
         </p>
-        <pre className='bg-mocha-surface0 text-mocha-text p-4 rounded-lg mb-4'>
-          {`["from 1 to 3","from 2 to 6","from -100 to 0"]`}
-        </pre>
-        <p className='text-lg text-mocha-text mb-4'>
-          Find out the maximum range, return by an array:
-        </p>
-        <pre className='bg-mocha-surface0 text-mocha-text p-4 rounded-lg mb-4'>
-          {`findMaxRange(["from 1 to 3","from 2 to 6","from -100 to 0"])`}
-          <br />
-          {`return: ["from -100 to 0"]`}
-        </pre>
-        <p className='text-lg text-mocha-text'>
-          If more than one element has the maximum range, return them according
-          to the order of the original array.
-        </p>
-      </div>
 
-      <div className='w-1/2'>
-        <h1 className='text-3xl font-bold mb-5 text-mocha-mauve'>Solution</h1>
+        <CodeEditor onSubmit={handleSubmit} />
 
-        <div className='mb-4'>
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className='border border-purple-800 text-mocha-mauve bg-mocha-base py-2 px-4 rounded'
-          >
-            {Object.keys(LANGUAGES).map((lang) => (
-              <option
-                key={lang}
-                value={lang}
-              >
-                {LANGUAGES[lang].name}
-              </option>
-            ))}
-          </select>
+        <div className='mt-6 bg-gray-50 p-4 rounded-lg'>
+          <h3 className='text-lg font-semibold text-gray-800'>Output:</h3>
+          <pre className='mt-2 p-2 bg-gray-200 rounded-md'>
+            {output || 'No output yet.'}
+          </pre>
         </div>
-
-        <div className={`bg-mocha-surface1 p-4 rounded-lg mb-4`}>
-          <MonacoEditor
-            height='430px'
-            theme='vs-dark'
-            language={language}
-            value={code}
-            onChange={(value) => setCode(value)}
-            options={{
-              wordWrap: 'on',
-              matchBrackets: 'always',
-              selectOnLineNumbers: true,
-              fontSize: 17,
-              fontFamily: 'JetBrains Mono',
-              bracketPairColorization: { enabled: true }
-            }}
-            className='rounded-lg'
-          />
-        </div>
-
-        <div className='flex justify-between'>
-          <div className='first-button flex gap-2'>
-            <button
-              onClick={handleCompile}
-              disabled={isCompiling}
-              className={`py-2 px-4 rounded ${
-                isCompiling
-                  ? 'bg-mocha-mauve text-mocha-surface0'
-                  : 'border-2 border-mocha-mauve text-mocha-mauve'
-              } `}
-            >
-              {isCompiling ? 'Compiling...' : 'Run Code'}
-            </button>
-            <button
-              className={`py-2 px-4 rounded bg-mocha-teal  border-mocha-mauve border-2 text-mocha-surface0 font-bold`}
-            >
-              {'Submit'}
-            </button>
-          </div>
-          <button
-            onClick={handleDownload}
-            className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded'
-          >
-            Download
-          </button>
-        </div>
-
-        {output && (
-          <div className='bg-mocha-surface0 p-4 rounded-lg mt-4'>
-            <h2 className='text-lg font-bold text-mocha-mauve'>Output</h2>
-            <pre className='text-mocha-text'>{output}</pre>
-          </div>
-        )}
-        {error && (
-          <div className='bg-red-600 text-white p-4 rounded-lg mt-4 overflow-x-scroll'>
-            <h2 className='text-lg font-bold'>Error</h2>
-            <pre>{error}</pre>
-          </div>
-        )}
       </div>
     </div>
   )
