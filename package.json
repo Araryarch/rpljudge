@@ -21,6 +21,7 @@
     "react-ace": "^12.0.0",
     "react-codemirror2": "^8.0.0",
     "react-dom": "^18",
+    "react-loading-skeleton": "^3.5.0",
     "react-monaco-editor": "^0.56.2",
     "react-toastify": "^10.0.6",
     "sweetalert2": "^11.6.13",

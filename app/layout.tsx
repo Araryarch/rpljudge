@@ -4,7 +4,7 @@ import './globals.css'
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['400', '700'] // Sesuaikan dengan bobot yang diperlukan
+  weight: ['400', '700']
 })
 
 export const metadata: Metadata = {

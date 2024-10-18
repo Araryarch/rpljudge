@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false, // Mengatur ke false untuk menonaktifkan pemeriksaan ketat
@@ -19,21 +15,13 @@
     "jsx": "preserve",
     "incremental": true,
     "noUnusedLocals": false, // Mengatur ke false untuk mengizinkan variabel lokal yang tidak terpakai
-    "noUnusedParameters": false // Mengatur ke false untuk mengizinkan parameter yang tidak terpakai
-    ,
+    "noUnusedParameters": false, // Mengatur ke false untuk mengizinkan parameter yang tidak terpakai
     "plugins": [
       {
         "name": "next"
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
