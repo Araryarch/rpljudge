@@ -94,16 +94,28 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
           </option>
         ))}
       </select>
-      <div className='p-2 bg-mocha-surface2 rounded'>
+      <div className='py-3 px-1 bg-[#1e1e1e] rounded'>
         <Editor
           height='400px'
           language={selectedLanguage === 63 ? 'javascript' : 'cpp'}
           value={code}
           onChange={handleEditorChange}
           theme='vs-dark'
-          className='border border-mocha-overlay0 rounded-md'
           options={{
-            fontSize: 17
+            fontSize: 17,
+            automaticLayout: true,
+            minimap: { enabled: true },
+            scrollBeyondLastLine: false,
+            lineNumbers: 'on',
+            folding: true,
+            quickSuggestions: true,
+            formatOnPaste: true,
+            formatOnType: true,
+            renderWhitespace: 'boundary',
+            wordWrap: 'on',
+            cursorSmoothCaretAnimation: true,
+            cursorBlinking: 'smooth',
+            suggestOnTriggerCharacters: true
           }}
         />
       </div>

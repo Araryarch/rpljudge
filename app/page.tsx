@@ -50,7 +50,7 @@ export default function Home() {
         {/* Instructions Section */}
         <div className='w-1/3 p-6 bg-mocha-mantle rounded-lg shadow-lg border border-mocha-overlay0 flex flex-col justify-between'>
           <div>
-            <h2 className='text-2xl font-bold text-mocha-text mb-4'>Soal:</h2>
+            <h2 className='text-2xl font-bold text-mocha-mauve mb-4'>Soal:</h2>
             <p className='text-mocha-subtext0 mb-2'>
               Buatlah program sederhana yang mencetak &quot;Hello, World!&quot;
               ke layar.
@@ -68,7 +68,7 @@ export default function Home() {
         {/* Code Editor Section */}
         <div className='w-2/3 ml-4 p-6 bg-mocha-mantle rounded-lg shadow-lg border border-mocha-overlay0 flex flex-col justify-between'>
           <div>
-            <h1 className='text-2xl font-bold text-mocha-text mb-4'>
+            <h1 className='text-2xl font-bold text-mocha-mauve mb-4'>
               Code Editor
             </h1>
             <p className='text-mocha-subtext0 mb-4'>
