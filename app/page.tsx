@@ -40,7 +40,7 @@ int main() {
     template: `print("Hello, World!")`
   },
   javascript: {
-    name: 'JavaScript',
+    name: 'Javascript',
     template: `console.log("Hello, World!");`
   },
   ruby: {
@@ -239,7 +239,7 @@ export default function Home() {
           </div>
         )}
         {error && (
-          <div className='bg-red-600 text-white p-4 rounded-lg mt-4'>
+          <div className='bg-red-600 text-white p-4 rounded-lg mt-4 overflow-x-scroll'>
             <h2 className='text-lg font-bold'>Error</h2>
             <pre>{error}</pre>
           </div>
