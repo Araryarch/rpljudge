@@ -77,9 +77,9 @@ export default function Home() {
             <CodeEditor onSubmit={handleSubmit} />
           </div>
 
-          <div className='mt-6 bg-mocha-surface1 p-4 rounded-lg border border-mocha-overlay0'>
+          <div className='mt-6 bg-mocha-surface1 p-4 rounded-lg border border-mocha-overlay0 font-bold'>
             <h3 className='text-lg font-semibold text-mocha-text'>Output:</h3>
-            <pre className='mt-2 p-2 bg-mocha-overlay1 rounded-md text-mocha-text'>
+            <pre className='mt-2 p-2 rounded-md text-mocha-text'>
               {output || 'No output yet.'}
             </pre>
           </div>

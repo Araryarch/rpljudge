@@ -109,7 +109,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialCode, onSubmit }) => {
       </div>
       <button
         onClick={handleRunCode}
-        className='p-2 bg-mocha-blue text-white rounded-md hover:bg-mocha-sapphire'
+        className='p-2 bg-mocha-mauve text-mocha-surface0 font-bold rounded-md hover:bg-mocha-sapphire'
       >
         Run Code
       </button>
