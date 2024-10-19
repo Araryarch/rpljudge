@@ -38,8 +38,6 @@ const Compiler = () => {
   const [resultLines, setResultLines] = useState([])
   const [activeTab, setActiveTab] = useState('question')
 
-  console.log(process.env.NEXT_PUBLIC_APIKEY)
-
   const compileCode = async () => {
     setError('')
     setOutput('')
