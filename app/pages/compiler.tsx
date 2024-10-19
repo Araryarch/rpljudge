@@ -5,12 +5,13 @@ import axios from 'axios'
 import MonacoEditor from '@monaco-editor/react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Skeleton from 'react-loading-skeleton'
 
 const templates = {
   c: '#include <stdio.h>\n\nint main() {\n    printf("Hello, World!");\n    return 0;\n}',
   cpp: '#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!";\n    return 0;\n}',
   java: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}',
-  python3: 'print("Hello, World!")',
+  python: 'print("Hello, World!")',
   php: '<?php\n\necho "Hello, World!";',
   javascript: 'console.log("Hello, World!");\n',
   ruby: 'puts "Hello, World!"',
@@ -37,47 +38,110 @@ const Compiler = () => {
   const [currentQuestion, setCurrentQuestion] = useState(questions[0])
   const [resultLines, setResultLines] = useState([])
   const [activeTab, setActiveTab] = useState('question')
+  const [compileTime, setCompileTime] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [hasCompiled, setHasCompiled] = useState(false)
 
   const compileCode = async () => {
     setError('')
     setOutput('')
+    setLoading(true)
 
     const inputs = currentQuestion.testCases
       .slice(0, 2)
       .map((tc) => tc.input)
       .join('\n')
+
     const options = {
       method: 'POST',
-      url: 'https://jdoodle2.p.rapidapi.com/v1',
+      url: 'https://paiza-io.p.rapidapi.com/runners/create',
+      params: {
+        source_code: code,
+        language,
+        input: inputs
+      },
       headers: {
         'x-rapidapi-key': process.env.NEXT_PUBLIC_APIKEY,
-        'x-rapidapi-host': 'jdoodle2.p.rapidapi.com',
+        'x-rapidapi-host': 'paiza-io.p.rapidapi.com',
         'Content-Type': 'application/json'
       },
-      data: {
-        language,
-        version: 'latest',
-        code,
-        input: inputs
-      }
+      data: {}
     }
 
     try {
       setActiveTab('output')
 
       const response = await axios.request(options)
-      const resultOutput = response.data.output || 'No output'
-      setOutput(resultOutput)
+      const runnerId = response.data.id
+
+      const pollOptions = {
+        method: 'GET',
+        url: 'https://paiza-io.p.rapidapi.com/runners/get_status',
+        params: { id: runnerId },
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_APIKEY,
+          'x-rapidapi-host': 'paiza-io.p.rapidapi.com'
+        }
+      }
+
+      let isRunning = true
+      while (isRunning) {
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+        const statusResponse = await axios.request(pollOptions)
+        const { status } = statusResponse.data
+
+        if (status === 'completed') {
+          isRunning = false
+        } else if (status === 'error') {
+          throw new Error('An error occurred while running the code.')
+        }
+      }
+
+      const detailsOptions = {
+        method: 'GET',
+        url: 'https://paiza-io.p.rapidapi.com/runners/get_details',
+        params: { id: runnerId },
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_APIKEY,
+          'x-rapidapi-host': 'paiza-io.p.rapidapi.com'
+        }
+      }
+
+      const outputResponse = await axios.request(detailsOptions)
+      const resultOutput = outputResponse.data.stdout || 'No output'
+      const errorOutput = outputResponse.data.stderr
+      const timeTaken = outputResponse.data.time || '0ms'
+
+      setLoading(false)
+
+      if (errorOutput) {
+        setError(`Error: ${errorOutput}`)
+      } else {
+        setOutput(resultOutput)
+      }
+      setHasCompiled(true)
+      setCompileTime(`Completed in ${timeTaken}ms`)
+
       setResultLines(resultOutput.trim().split('\n'))
     } catch (err) {
       setError('Error compiling code: ' + err.message)
     }
+
+    return true
   }
 
   const handleSubmit = async () => {
     setActiveTab('output')
-    await compileCode()
-    if (error) {
+
+    const compileSuccess = await compileCode()
+
+    if (!hasCompiled) {
+      setOutput('Please compile your code before submitting.')
+      toast.error('Please compile your code before submitting.')
+      return
+    }
+
+    if (!compileSuccess || error) {
       return
     }
 
@@ -94,28 +158,33 @@ const Compiler = () => {
         ? {
             isCorrect: line === expectedLines[index],
             output: line,
-            expected: expectedLines[index]
+            expected: expectedLines[index],
+            input: currentQuestion.testCases[index].input
           }
-        : { isCorrect: false, output: line, expected: 'No expected output' }
+        : {
+            isCorrect: false,
+            output: line,
+            expected: 'No expected output',
+            input: 'Unknown'
+          }
     )
 
     const allCorrect = results.every((result) => result.isCorrect)
 
     if (allCorrect) {
       toast.success('Correct! Your answer matches all expected outputs.')
-      setOutput('')
+      setOutput('Congratulations! All test cases passed.\n')
+      setResultLines(['Congratulations! All test cases passed.'])
     } else {
       setOutput('')
       results.forEach((result, index) => {
         if (!result.isCorrect) {
           setOutput(
             (prev) =>
-              `${prev}Test Case ${index + 1} Incorrect! Expected ${
-                result.expected
-              }, but got ${result.output}.\n`
+              `${prev}Input: ${result.input} Incorrect! Expected ${result.expected}, but got ${result.output}.\n`
           )
         } else {
-          setOutput((prev) => `${prev}Test Case ${index + 1} Correct!\n`)
+          setOutput((prev) => `${prev}Input: ${result.input} Correct!\n`)
         }
       })
     }
@@ -169,29 +238,56 @@ const Compiler = () => {
         )}
         {activeTab === 'output' && (
           <div className='output'>
-            {error ? (
+            {loading ? (
+              <div className='space-y-2'>
+                {Array.from({ length: 1 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className='h-28 bg-mocha-mauve rounded animate-pulse'
+                  />
+                ))}
+              </div>
+            ) : error ? (
               <pre className='error-message text-red-500 bg-red-100 p-2 rounded mt-2'>
                 {error}
               </pre>
             ) : (
-              <pre className='error-message text-mocha-text bg-mocha-surface0 p-2 rounded mt-2'>
-                {'Output :'}
+              <pre className='error-message text-mocha-text bg-mocha-surface0 p-2 rounded mt-2 flex justify-between items-center'>
+                <h1 className='text-mocha-text'>Output :</h1>
+                <p className='text-mocha-rosewater'>{compileTime}</p>
               </pre>
             )}
             {output && (
-              <pre className='output-message bg-mocha-surface0 text-mocha-text p-2 rounded mt-2'>
+              <pre
+                className={`output-message bg-mocha-surface0 text-mocha-text p-2 flex justify-start items-center rounded mt-2 ${
+                  output.includes('Congratulations')
+                    ? 'border-2 border-green-500'
+                    : output.includes('Incorrect!')
+                    ? 'border-2 border-red-500'
+                    : output.includes('compile')
+                    ? 'border-2 border-yellow-500 text-yellow-500'
+                    : ''
+                }`}
+              >
                 {output.split('\n').map((line, index) => {
                   const isIncorrect = line.includes('Incorrect!')
+                  const isCorrect = line.includes('Congratulations')
+                  const trimmedLine = line.trim()
                   const displayLine =
-                    parseInt(line.trim()) <= 0 ? 'Loading...' : line
+                    parseInt(trimmedLine) <= 0 ? 'Loading...' : line
 
                   return (
                     <span
                       key={index}
-                      className={isIncorrect ? 'text-red-500' : ''}
+                      className={
+                        isIncorrect
+                          ? 'text-red-500'
+                          : isCorrect
+                          ? 'text-green-500'
+                          : ''
+                      }
                     >
                       {displayLine}
-                      <br />
                     </span>
                   )
                 })}
@@ -243,7 +339,7 @@ const Compiler = () => {
               onClick={compileCode}
               className='mt-4 bg-mocha-rosewater border-mocha-mauve border-2 text-mocha-base py-2 px-4 rounded-md hover:bg-mocha-peach'
             >
-              Run Code
+              Compile
             </button>
             <button
               onClick={handleSubmit}
